@@ -1,0 +1,22 @@
+services:
+  teamcity:
+    image: jetbrains/teamcity-server:latest
+    # имя имеет значение!!!
+    container_name: teamcity-server
+    ports:
+      - "8111:8111"
+    volumes:
+      - ./teamcity/datadir:/data/teamcity_server/datadir
+      - ./teamcity/log:/opt/teamcity/logs
+
+  teamcity-agent-1:
+    image: jetbrains/teamcity-agent:latest
+    # имя имеет значение!!!
+    container_name: teamcity-agent-1
+    privileged: true
+    volumes:
+      -  ./teamcity/agent/conf:/data/teamcity_agent/conf
+#      - ./docker.sock:/var/run/docker.sock  # Пробрасываем Docker-сокет с хоста
+    environment:
+      - SERVER_URL=http://teamcity-server:8111
+      # - DOCKER_IN_DOCKER=start
